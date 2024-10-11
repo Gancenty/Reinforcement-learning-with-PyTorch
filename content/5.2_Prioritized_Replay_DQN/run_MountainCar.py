@@ -3,9 +3,9 @@ from RL_brain import DQNPrioritizedReplay
 import matplotlib.pyplot as plt
 import numpy as np
 
-env = gym.make("MountainCar-v0")
+env = gym.make("MountainCar-v0",render_mode="human")
 env = env.unwrapped
-env.seed(21)
+env.reset(seed=1)
 MEMORY_SIZE = 10000
 
 RL_natural = DQNPrioritizedReplay(n_actions=3, n_features=2, memory_size=MEMORY_SIZE, e_greedy_increment=0.00005, prioritized=False)
@@ -16,12 +16,12 @@ def train(RL):
 	steps = []
 	episodes = []
 	for i_episode in range(20):
-		observation = env.reset()
+		observation = env.reset()[0]
 		while True:
-			# print("episode: {} | total_steps: {}".format(i_episode, total_steps))
-			# if total_steps - MEMORY_SIZE > 8000: env.render()
+			print("episode: {} | total_steps: {}".format(i_episode, total_steps))
+			if total_steps - MEMORY_SIZE > 8000: env.render()
 			action = RL.choose_action(observation)
-			observation_, reward, done, info = env.step(action)
+			observation_, reward, done, info, _ = env.step(action)
 			if done: reward = 10
 			RL.store_transition(observation, action, reward, observation_)
 			if total_steps > MEMORY_SIZE:
