@@ -18,8 +18,8 @@ LR_A = 0.001   # learning rate for actor
 LR_C = 0.01   # learning rete for critic
 
 
-env = gym.make('CartPole-v0')
-env.seed(1)   # reproducible
+env = gym.make('CartPole-v0',render_mode="human")
+env.reset(seed=1)   # reproducible
 env = env.unwrapped
 
 
@@ -110,7 +110,7 @@ actor = Actor(n_features=N_F, n_actions=N_A, lr=LR_A)
 critic = Critic(n_features=N_F, lr=LR_C)   # we need a good teacher, so the teacher should learn faster than the actor
 
 for i_episode in range(MAX_EPISODE):
-	s = env.reset()
+	s = env.reset()[0]
 	t = 0
 	track_r = []
 
@@ -119,7 +119,7 @@ for i_episode in range(MAX_EPISODE):
 
 		a = actor.choose_action(s)
 
-		s_, r, done, info = env.step(a)
+		s_, r, done, info, _ = env.step(a)
 
 		if done: r = -20
 
